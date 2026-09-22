@@ -24,7 +24,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="av-auth-wrap fade-in">
+    <div className="av-auth-wrap">
       <div className="auth-card">
         <div className="auth-header">
           <div className="mark"></div>

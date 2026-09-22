@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import { createElement } from "react";
 
 export interface User {
   name: string;
@@ -16,7 +17,15 @@ function readUser(): User | null {
   }
 }
 
-export function useUser() {
+interface UserContextValue {
+  user: User | null;
+  login: (u: User) => void;
+  signOut: () => void;
+}
+
+const UserContext = createContext<UserContextValue | null>(null);
+
+export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -33,5 +42,13 @@ export function useUser() {
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  return { user, login, signOut };
+  return createElement(UserContext.Provider, { value: { user, login, signOut } }, children);
+}
+
+export function useUser(): UserContextValue {
+  const ctx = useContext(UserContext);
+  if (!ctx) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return ctx;
 }

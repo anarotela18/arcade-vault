@@ -50,7 +50,7 @@ export default function GamePlayerPage({
   };
 
   return (
-    <div className="av-player fade-in">
+    <div className="av-player">
       <div className="player-hud">
         <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
           <div className="hud-stat">

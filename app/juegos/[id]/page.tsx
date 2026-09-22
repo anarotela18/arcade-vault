@@ -14,7 +14,7 @@ export default async function GameDetailPage({
   const scores = seededScores(id.length * 17 + 3, 10);
 
   return (
-    <div className="av-detail fade-in">
+    <div className="av-detail">
       <div>
         <div className="detail-cover">
           <div className={"cover-bg " + game.cover}></div>

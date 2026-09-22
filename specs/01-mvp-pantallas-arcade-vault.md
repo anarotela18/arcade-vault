@@ -86,22 +86,22 @@ export function seededScores(seed: number, count?: number): ScoreRow[];
 
 ## Criterios de aceptación
 
-- [ ] `next build` compila sin errores de tipos ni de build.
-- [ ] `/` muestra el grid de juegos de `GAMES`, con buscador por texto y filtro por categoría (`CATS`) funcionando en cliente.
-- [ ] Cada tarjeta de juego navega a `/juegos/[id]` correspondiente.
-- [ ] `/juegos/[id]` muestra portada, tags, descripción larga, stats (partidas, mejor global, dificultad) y una tabla de mejores puntuaciones generada con `seededScores`.
-- [ ] `/juegos/[id]` con un `id` inexistente devuelve la página 404 de Next.js (`notFound()`).
-- [ ] `/juegos/[id]/jugar` muestra el HUD (jugador, puntuación, vidas, nivel) y la pantalla CRT con valores de ejemplo fijos, sin que el puntaje cambie solo con el tiempo.
-- [ ] En `/juegos/[id]/jugar`, el botón "PAUSA" muestra/oculta el overlay "EN PAUSA" sobre la pantalla CRT.
-- [ ] En `/juegos/[id]/jugar`, el botón "FIN" abre el modal de fin de juego con un puntaje fijo, permite ingresar iniciales, guardar el resultado (persistido en `localStorage["av_scores"]`) y luego reiniciar o volver a la biblioteca.
-- [ ] `/juegos/[id]/jugar` con un `id` inexistente devuelve 404.
-- [ ] `/auth` permite enviar el formulario de inicio de sesión o creación de cuenta (sin validación) y redirige a `/` con una sesión mock guardada en `localStorage["av_user"]`.
-- [ ] `/auth` permite continuar como invitado, limpiando cualquier sesión previa y redirigiendo a `/`.
-- [ ] El `Nav` muestra "Iniciar Sesión" cuando no hay usuario y el nombre del usuario (con opción de cerrar sesión) cuando sí lo hay, en todas las páginas.
-- [ ] El menú móvil (hamburguesa) del `Nav` se abre y cierra correctamente en viewport angosto.
-- [ ] `/salon` muestra tabs por juego, un podio con los 3 primeros puestos y una tabla completa de posiciones generados con `seededScores`; si hay sesión activa, se agrega la fila de "tu mejor marca".
-- [ ] Todas las pantallas usan las clases CSS ya definidas en `app/globals.css` (proveniente de `styles.css`) sin introducir estilos nuevos ad hoc.
-- [ ] El copy visible (textos en español, labels, mensajes) coincide con el de los archivos `.jsx` de referencia.
+- [x] `next build` compila sin errores de tipos ni de build.
+- [x] `/` muestra el grid de juegos de `GAMES`, con buscador por texto y filtro por categoría (`CATS`) funcionando en cliente.
+- [x] Cada tarjeta de juego navega a `/juegos/[id]` correspondiente.
+- [x] `/juegos/[id]` muestra portada, tags, descripción larga, stats (partidas, mejor global, dificultad) y una tabla de mejores puntuaciones generada con `seededScores`.
+- [x] `/juegos/[id]` con un `id` inexistente devuelve la página 404 de Next.js (`notFound()`).
+- [x] `/juegos/[id]/jugar` muestra el HUD (jugador, puntuación, vidas, nivel) y la pantalla CRT con valores de ejemplo fijos, sin que el puntaje cambie solo con el tiempo.
+- [x] En `/juegos/[id]/jugar`, el botón "PAUSA" muestra/oculta el overlay "EN PAUSA" sobre la pantalla CRT.
+- [x] En `/juegos/[id]/jugar`, el botón "FIN" abre el modal de fin de juego con un puntaje fijo, permite ingresar iniciales, guardar el resultado (persistido en `localStorage["av_scores"]`) y luego reiniciar o volver a la biblioteca.
+- [x] `/juegos/[id]/jugar` con un `id` inexistente devuelve 404.
+- [x] `/auth` permite enviar el formulario de inicio de sesión o creación de cuenta (sin validación) y redirige a `/` con una sesión mock guardada en `localStorage["av_user"]`.
+- [x] `/auth` permite continuar como invitado, limpiando cualquier sesión previa y redirigiendo a `/`.
+- [x] El `Nav` muestra "Iniciar Sesión" cuando no hay usuario y el nombre del usuario (con opción de cerrar sesión) cuando sí lo hay, en todas las páginas.
+- [x] El menú móvil (hamburguesa) del `Nav` se abre y cierra correctamente en viewport angosto.
+- [x] `/salon` muestra tabs por juego, un podio con los 3 primeros puestos y una tabla completa de posiciones generados con `seededScores`; si hay sesión activa, se agrega la fila de "tu mejor marca".
+- [x] Todas las pantallas usan las clases CSS ya definidas en `app/globals.css` (proveniente de `styles.css`) sin introducir estilos nuevos ad hoc.
+- [x] El copy visible (textos en español, labels, mensajes) coincide con el de los archivos `.jsx` de referencia.
 
 ## Decisiones tomadas y descartadas
 

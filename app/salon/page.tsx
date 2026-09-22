@@ -15,7 +15,7 @@ export default function SalonPage() {
   const youScore = user ? rows[5]?.score - 2400 : null;
 
   return (
-    <div className="av-hall fade-in">
+    <div className="av-hall">
       <div className="hall-head">
         <h1>SALÓN DE LA FAMA</h1>
         <p className="pixel" style={{ fontSize: 10 }}>
