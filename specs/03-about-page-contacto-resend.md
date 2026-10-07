@@ -115,6 +115,8 @@ Convenciones:
 - **No:** rate limiting o CAPTCHA. Requieren almacenamiento o servicios externos que no aportan al objetivo del curso.
 - **Sí:** correo en texto plano. Evita plantillas HTML y el riesgo de inyección de HTML con contenido del visitante.
 - **Sí:** agregar "Acerca de" al `Nav` ahora. La spec 02 lo había diferido precisamente hasta que la ruta existiera.
+- **Sí:** ajustar el `Nav` en `app/globals.css` al agregar el cuarto enlace. A 1280 px "Salón de la Fama" y "Acerca de" se partían en dos líneas. Se agregó `white-space: nowrap` a los enlaces, al contador de créditos y al botón de sesión, y como con `nowrap` el `Nav` necesita unos 1200 px, se oculta el contador de créditos por debajo de 1240 px y el menú hamburguesa pasa de 840 px a 1100 px. Esto cambia el `Nav` de todas las páginas entre 841 y 1100 px (ahora muestran el menú hamburguesa). En el bloque móvil el botón vuelve a `white-space: normal` para no desbordar a 375 px.
+- **No:** reducir paddings o letter-spacing de los enlaces para que quepan sin cambiar el corte. Se descartó por alejarse del diseño del template.
 - **Sí:** estilos ya presentes en `app/globals.css`. La spec 02 incorporó las clases de About; solo se ajustará lo que falte al comparar con `styles.css`.
 
 ## Riesgos identificados
@@ -132,6 +134,6 @@ Convenciones:
 - Dominio verificado en Resend y correos con plantilla HTML.
 - Rate limiting, CAPTCHA o historial de mensajes en base de datos.
 - Cambios de diseño o copy respecto a `about.jsx`.
-- Cambios en las pantallas de las specs 01 y 02, salvo el enlace "Acerca de" en el `Nav`.
+- Cambios en las pantallas de las specs 01 y 02, salvo el enlace "Acerca de" en el `Nav` y su ajuste de responsividad (ver Decisiones).
 
 Cada uno de esos puntos, si se hace, va en su propia spec.
