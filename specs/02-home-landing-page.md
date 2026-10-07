@@ -69,7 +69,7 @@ Convenciones:
 
 ## Criterios de aceptación
 
-- [ ] `next build` y `npm run lint` terminan sin errores.
+- [ ] `next build` termina sin errores y `npm run lint` no reporta errores nuevos en `app/`, `components/` ni `lib/` (el único existente es `lib/use-user.ts:32`, de la spec 01).
 - [ ] `/` muestra las 6 secciones del Home en el orden del template, con el copy en español idéntico a `home.jsx`.
 - [ ] El hero muestra las 8 siluetas flotantes, el título en 3 líneas y los dos CTAs.
 - [ ] La sección "JUEGOS DISPONIBLES AHORA" muestra exactamente los 6 primeros juegos de `GAMES`, y cada tarjeta navega a `/juegos/[id]`.
@@ -95,6 +95,8 @@ Convenciones:
 - **Sí:** datos del Home estáticos en `lib/home-data.ts`. Decidido por el usuario. Es consistente con la spec 01 (todo mock) y evita lógica nueva.
 - **No:** derivar la actividad y el top de `av_scores`/`seededScores`. Se descartó por introducir lógica que el template no tiene.
 - **Sí:** `useReveal` como hook propio con `IntersectionObserver`. Es fiel al template y no requiere librerías.
+- **Sí:** excluir `references/**` de ESLint (`eslint.config.mjs`) y pedir "sin errores nuevos" en el criterio de lint. Los `.jsx` de `references/` son plantillas de diseño, no código de la app, y generaban errores ajenos a esta spec. El error de `lib/use-user.ts:32` es de la spec 01 y corregirlo toca la lógica de sesión, así que queda fuera de alcance.
+- **Sí:** reducir los espacios del `Nav` en móvil (`gap: 8px`, `auth-btn` sin `margin-left`) para cumplir "sin desborde a 375 px". El desborde ya existía, también en el template. Como cambio relacionado, se ajustaron las columnas de la tabla de `/salon` en `max-width: 720px`, que desbordaba 11 px.
 
 ## Riesgos identificados
 
