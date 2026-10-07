@@ -27,10 +27,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${pressStart2P.variable} ${jetBrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <div className="av-bg" />
+        <div className="av-noise" />
         <UserProvider>
           <div id="root">
-            <div className="av-bg" />
-            <div className="av-noise" />
             <Nav />
             <main className="av-main">{children}</main>
             <footer
