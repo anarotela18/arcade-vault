@@ -1,6 +1,6 @@
 # 04 — Conexión con Supabase: cliente de navegador y cliente de servidor
 
-**Estado:** Aprobado
+**Estado:** Implementado
 **Depende de:** —
 **Fecha:** 2026-10-12
 
@@ -78,19 +78,19 @@ Convenciones:
 
 ## Criterios de aceptación
 
-- [ ] `next build` termina sin errores y `npm run lint` no reporta errores nuevos en `app/`, `components/` ni `lib/`.
-- [ ] Existen `lib/supabase/client.ts` y `lib/supabase/server.ts`, cada uno exporta `createClient`.
-- [ ] `lib/supabase/client.ts` empieza con `"use client"` o solo se importa desde componentes cliente, y no importa `next/headers`.
-- [ ] `lib/supabase/server.ts` usa `cookies()` de `next/headers` y no se incluye en el bundle del cliente.
-- [ ] Con las variables configuradas, una llamada desde el cliente de servidor al proyecto responde sin error.
-- [ ] Con las variables configuradas, una llamada desde el cliente de navegador al proyecto responde sin error.
-- [ ] Sin `NEXT_PUBLIC_SUPABASE_URL` o sin `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `createClient()` lanza un error que nombra la variable faltante.
-- [ ] Con `SUPABASE_SERVICE_ROLE_KEY` vacía, la app arranca y `createClient()` funciona igual: ninguna parte del código la lee.
-- [ ] `.env` no aparece en `git status` y `.env.template` sí es versionable.
-- [ ] `.env.template` contiene `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` solo con valores de ejemplo (sin la URL ni la clave reales), `SUPABASE_SERVICE_ROLE_KEY` vacía, y ya no contiene `SUPEBASE_DB_PASSWORD`.
-- [ ] `SUPABASE_SERVICE_ROLE_KEY` no tiene prefijo `NEXT_PUBLIC_`, no se referencia en ningún archivo de `app/`, `components/` ni `lib/`, y ningún valor real de service role aparece en el repositorio ni en el bundle del cliente.
-- [ ] Las páginas de las specs 01, 02 y 03 (`/`, `/juegos`, `/juegos/[id]`, `/auth`, `/salon`, `/acerca-de`) se ven y funcionan igual que antes, incluido el login mock y las puntuaciones en `localStorage`.
-- [ ] El proyecto de Supabase sigue sin tablas (`list_tables` devuelve una lista vacía).
+- [x] `next build` termina sin errores y `npm run lint` no reporta errores nuevos en `app/`, `components/` ni `lib/`.
+- [x] Existen `lib/supabase/client.ts` y `lib/supabase/server.ts`, cada uno exporta `createClient`.
+- [x] `lib/supabase/client.ts` empieza con `"use client"` o solo se importa desde componentes cliente, y no importa `next/headers`.
+- [x] `lib/supabase/server.ts` usa `cookies()` de `next/headers` y no se incluye en el bundle del cliente.
+- [x] Con las variables configuradas, una llamada desde el cliente de servidor al proyecto responde sin error.
+- [x] Con las variables configuradas, una llamada desde el cliente de navegador al proyecto responde sin error.
+- [x] Sin `NEXT_PUBLIC_SUPABASE_URL` o sin `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `createClient()` lanza un error que nombra la variable faltante.
+- [x] Con `SUPABASE_SERVICE_ROLE_KEY` vacía, la app arranca y `createClient()` funciona igual: ninguna parte del código la lee.
+- [x] `.env` no aparece en `git status` y `.env.template` sí es versionable.
+- [x] `.env.template` contiene `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` solo con valores de ejemplo (sin la URL ni la clave reales), `SUPABASE_SERVICE_ROLE_KEY` vacía, y ya no contiene `SUPEBASE_DB_PASSWORD`.
+- [x] `SUPABASE_SERVICE_ROLE_KEY` no tiene prefijo `NEXT_PUBLIC_`, no se referencia en ningún archivo de `app/`, `components/` ni `lib/`, y ningún valor real de service role aparece en el repositorio ni en el bundle del cliente.
+- [x] Las páginas de las specs 01, 02 y 03 (`/`, `/juegos`, `/juegos/[id]`, `/auth`, `/salon`, `/acerca-de`) se ven y funcionan igual que antes, incluido el login mock y las puntuaciones en `localStorage`.
+- [x] El proyecto de Supabase sigue sin tablas (`list_tables` devuelve una lista vacía).
 
 ## Decisiones tomadas y descartadas
 
