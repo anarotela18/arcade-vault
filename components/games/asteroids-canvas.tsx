@@ -77,6 +77,7 @@ export function AsteroidsCanvas({
     gameRef.current = game;
     game.start();
     if (pausedRef.current) game.pause();
+    else canvas.focus({ preventScroll: true });
 
     return () => {
       game.destroy();
@@ -87,7 +88,11 @@ export function AsteroidsCanvas({
   // La pausa la decide la aplicación; el motor solo obedece.
   useEffect(() => {
     if (paused) gameRef.current?.pause();
-    else gameRef.current?.resume();
+    else {
+      gameRef.current?.resume();
+      // Evita que Espacio active un botón que quedó con el foco (p. ej. PAUSA).
+      canvasRef.current?.focus({ preventScroll: true });
+    }
   }, [paused]);
 
   if (coarse) {
@@ -107,7 +112,10 @@ export function AsteroidsCanvas({
       ref={canvasRef}
       width={800}
       height={600}
+      tabIndex={0}
+      aria-label="Juego Asteroides"
       style={{
+        outline: "none",
         position: "absolute",
         inset: 0,
         width: "100%",

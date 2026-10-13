@@ -350,11 +350,23 @@ export function createAsteroidsGame(
   let lastHud: AsteroidsHudState | null = null;
 
   // ── Input ───────────────────────────────────────────────────────────────────
+  // Solo se capturan estas teclas, y solo mientras el juego corre: en pausa
+  // (o con el modal abierto) la página recupera su comportamiento normal.
+  const GAME_KEYS = [
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowUp",
+    "ArrowDown",
+    "Space",
+  ];
   const onKeyDown = (e: KeyboardEvent) => {
+    if (!running || !GAME_KEYS.includes(e.code)) return;
+    e.preventDefault();
     if (!keys[e.code]) justPressed[e.code] = true;
     keys[e.code] = true;
   };
   const onKeyUp = (e: KeyboardEvent) => {
+    if (running && GAME_KEYS.includes(e.code)) e.preventDefault();
     keys[e.code] = false;
   };
   const pressed = (code: string) => {
