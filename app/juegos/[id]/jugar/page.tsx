@@ -1,14 +1,27 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState, useRef, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
 import { GAMES } from "@/lib/data";
 import { useUser } from "@/lib/use-user";
+import {
+  AsteroidsCanvas,
+  type AsteroidsHandle,
+} from "@/components/games/asteroids-canvas";
+import type { AsteroidsHudState } from "@/lib/games/asteroids/types";
 
 const DEMO_SCORE = 84200;
 const DEMO_LIVES = 3;
 const DEMO_LEVEL = 4;
+
+const ASTEROIDES_ID = "asteroides";
+const INITIAL_HUD: AsteroidsHudState = {
+  score: 0,
+  lives: 3,
+  level: 1,
+  tripleShot: 0,
+};
 
 function saveScore(entry: { game: string; score: number; name: string }) {
   try {
@@ -34,18 +47,60 @@ export default function GamePlayerPage({
   const [over, setOver] = useState(false);
   const [name, setName] = useState(user ? user.name : "INVITADO");
   const [saved, setSaved] = useState(false);
+  const [hud, setHud] = useState<AsteroidsHudState>(INITIAL_HUD);
+  const [finalScore, setFinalScore] = useState(0);
+  const asteroidsRef = useRef<AsteroidsHandle>(null);
+
+  const isAsteroids = id === ASTEROIDES_ID;
+
+  // La pausa es de la aplicación: tecla P y pérdida de foco (solo asteroides).
+  useEffect(() => {
+    if (!isAsteroids) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.code !== "KeyP" || e.repeat || over) return;
+      setPaused((p) => !p);
+    };
+    const pause = () => setPaused(true);
+    const onVisibility = () => {
+      if (document.hidden) pause();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("blur", pause);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("blur", pause);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [isAsteroids, over]);
 
   if (!game) notFound();
 
-  const endGame = () => setOver(true);
+  const score = isAsteroids ? finalScore : DEMO_SCORE;
+  const hudScore = isAsteroids ? hud.score : DEMO_SCORE;
+  const hudLives = isAsteroids ? hud.lives : DEMO_LIVES;
+  const hudLevel = isAsteroids ? hud.level : DEMO_LEVEL;
+
+  const endGame = () => {
+    if (isAsteroids) asteroidsRef.current?.end();
+    else setOver(true);
+  };
+  const handleGameOver = (final: number) => {
+    setFinalScore(final);
+    setOver(true);
+  };
   const restart = () => {
     setPaused(false);
     setOver(false);
     setSaved(false);
+    if (isAsteroids) {
+      setHud(INITIAL_HUD);
+      asteroidsRef.current?.restart();
+    }
   };
 
   const handleSave = () => {
-    saveScore({ game: game.id, score: DEMO_SCORE, name });
+    saveScore({ game: game.id, score, name });
     setSaved(true);
   };
 
@@ -61,16 +116,22 @@ export default function GamePlayerPage({
           </div>
           <div className="hud-stat">
             <div className="l">Puntuación</div>
-            <div className="v">{DEMO_SCORE.toLocaleString("es-ES")}</div>
+            <div className="v">{hudScore.toLocaleString("es-ES")}</div>
           </div>
           <div className="hud-stat lives">
             <div className="l">Vidas</div>
-            <div className="v">{"♥ ".repeat(DEMO_LIVES).trim() || "—"}</div>
+            <div className="v">{"♥ ".repeat(hudLives).trim() || "—"}</div>
           </div>
           <div className="hud-stat level">
             <div className="l">Nivel</div>
-            <div className="v">{String(DEMO_LEVEL).padStart(2, "0")}</div>
+            <div className="v">{String(hudLevel).padStart(2, "0")}</div>
           </div>
+          {isAsteroids && hud.tripleShot > 0 && (
+            <div className="hud-stat">
+              <div className="l">Disparo 3x</div>
+              <div className="v">{hud.tripleShot.toFixed(1)}s</div>
+            </div>
+          )}
         </div>
         <div className="hud-actions">
           <button className="btn yellow" onClick={() => setPaused((p) => !p)}>
@@ -87,13 +148,22 @@ export default function GamePlayerPage({
 
       <div className="crt">
         <div className="crt-screen">
-          <div className="game-arena">
-            <div className="grid-floor"></div>
-            <div className="enemy e1"></div>
-            <div className="enemy e2"></div>
-            <div className="enemy e3"></div>
-            <div className="player-ship"></div>
-          </div>
+          {isAsteroids ? (
+            <AsteroidsCanvas
+              ref={asteroidsRef}
+              paused={paused || over}
+              onHudChange={setHud}
+              onGameOver={handleGameOver}
+            />
+          ) : (
+            <div className="game-arena">
+              <div className="grid-floor"></div>
+              <div className="enemy e1"></div>
+              <div className="enemy e2"></div>
+              <div className="enemy e3"></div>
+              <div className="player-ship"></div>
+            </div>
+          )}
           {paused && (
             <div className="crt-content" style={{ background: "rgba(0,0,0,0.6)", zIndex: 5 }}>
               <div>
@@ -127,7 +197,7 @@ export default function GamePlayerPage({
           <div className="modal">
             <h2>FIN DEL JUEGO</h2>
             <div className="final-label">PUNTUACIÓN FINAL</div>
-            <div className="final">{DEMO_SCORE.toLocaleString("es-ES")}</div>
+            <div className="final">{score.toLocaleString("es-ES")}</div>
             {!saved ? (
               <div className="input-row">
                 <input
