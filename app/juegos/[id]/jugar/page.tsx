@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
-import { GAMES } from "@/lib/data";
+import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/lib/use-user";
 import {
   AsteroidsCanvas,
@@ -11,11 +11,9 @@ import {
 } from "@/components/games/asteroids-canvas";
 import type { AsteroidsHudState } from "@/lib/games/asteroids/types";
 
-const DEMO_SCORE = 84200;
-const DEMO_LIVES = 3;
-const DEMO_LEVEL = 4;
-
-const ASTEROIDES_ID = "asteroides";
+const ASTEROIDS_ID = "asteroids";
+const ASTEROIDS_TITLE = "ASTEROIDS";
+const PLAYER_NAME_KEY = "av_player_name";
 const INITIAL_HUD: AsteroidsHudState = {
   score: 0,
   lives: 3,
@@ -23,23 +21,12 @@ const INITIAL_HUD: AsteroidsHudState = {
   tripleShot: 0,
 };
 
-function saveScore(entry: { game: string; score: number; name: string }) {
-  try {
-    const all = JSON.parse(localStorage.getItem("av_scores") || "[]");
-    all.push({ ...entry, at: Date.now() });
-    localStorage.setItem("av_scores", JSON.stringify(all));
-  } catch {
-    // ignore
-  }
-}
-
 export default function GamePlayerPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const game = GAMES.find((g) => g.id === id);
   const router = useRouter();
   const { user } = useUser();
 
@@ -47,11 +34,13 @@ export default function GamePlayerPage({
   const [over, setOver] = useState(false);
   const [name, setName] = useState(user ? user.name : "INVITADO");
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
   const [hud, setHud] = useState<AsteroidsHudState>(INITIAL_HUD);
   const [finalScore, setFinalScore] = useState(0);
   const asteroidsRef = useRef<AsteroidsHandle>(null);
 
-  const isAsteroids = id === ASTEROIDES_ID;
+  const isAsteroids = id === ASTEROIDS_ID;
 
   // La pausa es de la aplicación: tecla P y pérdida de foco (solo asteroides).
   useEffect(() => {
@@ -74,33 +63,53 @@ export default function GamePlayerPage({
     };
   }, [isAsteroids, over]);
 
-  if (!game) notFound();
+  if (!isAsteroids) notFound();
 
-  const score = isAsteroids ? finalScore : DEMO_SCORE;
-  const hudScore = isAsteroids ? hud.score : DEMO_SCORE;
-  const hudLives = isAsteroids ? hud.lives : DEMO_LIVES;
-  const hudLevel = isAsteroids ? hud.level : DEMO_LEVEL;
+  const score = finalScore;
+  const hudScore = hud.score;
+  const hudLives = hud.lives;
+  const hudLevel = hud.level;
 
   const endGame = () => {
-    if (isAsteroids) asteroidsRef.current?.end();
-    else setOver(true);
+    asteroidsRef.current?.end();
   };
   const handleGameOver = (final: number) => {
     setFinalScore(final);
+    try {
+      const stored = localStorage.getItem(PLAYER_NAME_KEY);
+      if (stored) setName(stored);
+    } catch {
+      // ignore
+    }
     setOver(true);
   };
   const restart = () => {
     setPaused(false);
     setOver(false);
     setSaved(false);
-    if (isAsteroids) {
-      setHud(INITIAL_HUD);
-      asteroidsRef.current?.restart();
-    }
+    setSaveError(false);
+    setHud(INITIAL_HUD);
+    asteroidsRef.current?.restart();
   };
 
-  const handleSave = () => {
-    saveScore({ game: game.id, score, name });
+  const handleSave = async () => {
+    if (saving || saved) return;
+    const playerName = name.trim() || "INVITADO";
+    setSaving(true);
+    setSaveError(false);
+    try {
+      localStorage.setItem(PLAYER_NAME_KEY, playerName);
+    } catch {
+      // ignore
+    }
+    const { error } = await createClient()
+      .from("scores")
+      .insert({ game_id: ASTEROIDS_ID, player_name: playerName, score, user_id: null });
+    setSaving(false);
+    if (error) {
+      setSaveError(true);
+      return;
+    }
     setSaved(true);
   };
 
@@ -126,7 +135,7 @@ export default function GamePlayerPage({
             <div className="l">Nivel</div>
             <div className="v">{String(hudLevel).padStart(2, "0")}</div>
           </div>
-          {isAsteroids && hud.tripleShot > 0 && (
+          {hud.tripleShot > 0 && (
             <div className="hud-stat">
               <div className="l">Disparo 3x</div>
               <div className="v">{hud.tripleShot.toFixed(1)}s</div>
@@ -140,7 +149,7 @@ export default function GamePlayerPage({
           <button className="btn magenta" onClick={endGame}>
             FIN
           </button>
-          <button className="btn ghost" onClick={() => router.push(`/juegos/${game.id}`)}>
+          <button className="btn ghost" onClick={() => router.push(`/juegos/${ASTEROIDS_ID}`)}>
             SALIR
           </button>
         </div>
@@ -148,22 +157,12 @@ export default function GamePlayerPage({
 
       <div className="crt">
         <div className="crt-screen">
-          {isAsteroids ? (
-            <AsteroidsCanvas
-              ref={asteroidsRef}
-              paused={paused || over}
-              onHudChange={setHud}
-              onGameOver={handleGameOver}
-            />
-          ) : (
-            <div className="game-arena">
-              <div className="grid-floor"></div>
-              <div className="enemy e1"></div>
-              <div className="enemy e2"></div>
-              <div className="enemy e3"></div>
-              <div className="player-ship"></div>
-            </div>
-          )}
+          <AsteroidsCanvas
+            ref={asteroidsRef}
+            paused={paused || over}
+            onHudChange={setHud}
+            onGameOver={handleGameOver}
+          />
           {paused && (
             <div className="crt-content" style={{ background: "rgba(0,0,0,0.6)", zIndex: 5 }}>
               <div>
@@ -187,7 +186,7 @@ export default function GamePlayerPage({
         </div>
         <div className="crt-bottom">
           <span className="led">SEÑAL OK</span>
-          <span>{game.title} · CRT-83 · 60 HZ</span>
+          <span>{ASTEROIDS_TITLE} · CRT-83 · 60 HZ</span>
           <span>CARGA · 1MB</span>
         </div>
       </div>
@@ -205,12 +204,17 @@ export default function GamePlayerPage({
                   onChange={(e) => setName(e.target.value.toUpperCase().slice(0, 10))}
                   placeholder="TUS INICIALES"
                 />
-                <button className="btn yellow" onClick={handleSave}>
-                  GUARDAR PUNTUACIÓN
+                <button className="btn yellow" onClick={handleSave} disabled={saving}>
+                  {saving ? "GUARDANDO…" : "GUARDAR PUNTUACIÓN"}
                 </button>
               </div>
             ) : (
               <div className="toast-saved">▸ PUNTUACIÓN GUARDADA_</div>
+            )}
+            {saveError && !saved && (
+              <div className="toast-saved" style={{ color: "var(--magenta)" }}>
+                ▸ ERROR AL GUARDAR. INTÉNTALO DE NUEVO_
+              </div>
             )}
             <div className="actions">
               <button className="btn" onClick={restart}>
