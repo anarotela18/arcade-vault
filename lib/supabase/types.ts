@@ -17,3 +17,5 @@ export interface ScoreRow {
   user_id: string | null;
   created_at: string;
 }
+
+export type GameWithBest = GameRow & { best: number };

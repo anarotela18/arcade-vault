@@ -1,14 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import type { Game } from "@/lib/data";
+import type { GameWithBest } from "@/lib/supabase/types";
 
 export default function GameCard({
   game,
   onSelect,
 }: {
-  game: Game;
-  onSelect: (game: Game) => void;
+  game: GameWithBest;
+  onSelect: (game: GameWithBest) => void;
 }) {
   const tiltRef = useRef<HTMLDivElement>(null);
 
