@@ -1,6 +1,6 @@
 # 05 — Juego Asteroids jugable en la plataforma (`asteroides`)
 
-**Estado:** Aprobado
+**Estado:** Implementado
 **Depende de:** SPEC 01
 **Fecha:** 2026-10-13
 
@@ -104,29 +104,29 @@ Convenciones:
 
 ## Criterios de aceptación
 
-- [ ] `next build` termina sin errores y `npm run lint` no reporta errores nuevos en `app/`, `components/` ni `lib/`.
-- [ ] `GAMES` contiene la entrada `asteroides` y la biblioteca (`/`) y `/juegos/asteroides` la muestran; la entrada `rocas` sigue igual.
-- [ ] `/juegos/asteroides/jugar` muestra el canvas del juego dentro de `.crt-screen`, sin estirarse y manteniendo proporción 4:3, sin desbordar horizontalmente a 375 px de ancho (en táctil se ve el aviso).
+- [x] `next build` termina sin errores y `npm run lint` no reporta errores nuevos en `app/`, `components/` ni `lib/`.
+- [x] `GAMES` contiene la entrada `asteroides` y la biblioteca (`/`) y `/juegos/asteroides` la muestran; la entrada `rocas` sigue igual.
+- [x] `/juegos/asteroides/jugar` muestra el canvas del juego dentro de `.crt-screen`, sin estirarse y manteniendo proporción 4:3, sin desbordar horizontalmente a 375 px de ancho (en táctil se ve el aviso).
 - [ ] Al entrar, la nave aparece parpadeando en el centro con 4 asteroides grandes a más de 130 px de ella.
-- [ ] `←` `→` rotan la nave, `↑` la propulsa con inercia y `Espacio` dispara con 0,2 s de enfriamiento; la nave y los disparos atraviesan los bordes y reaparecen por el lado opuesto.
-- [ ] Mientras se juega, las flechas y Espacio no hacen scroll de la página.
-- [ ] Destruir un asteroide grande suma 20, uno mediano 50 y uno pequeño 100, y el HUD de la plataforma lo refleja; un asteroide grande se parte en 2 medianos, uno mediano en 2 pequeños y uno pequeño desaparece.
-- [ ] El HUD de la plataforma muestra jugador, puntuación, vidas (corazones) y nivel con datos reales; el canvas no dibuja HUD propio.
+- [x] `←` `→` rotan la nave, `↑` la propulsa con inercia y `Espacio` dispara con 0,2 s de enfriamiento; la nave y los disparos atraviesan los bordes y reaparecen por el lado opuesto.
+- [x] Mientras se juega, las flechas y Espacio no hacen scroll de la página.
+- [x] Destruir un asteroide grande suma 20, uno mediano 50 y uno pequeño 100, y el HUD de la plataforma lo refleja; un asteroide grande se parte en 2 medianos, uno mediano en 2 pequeños y uno pequeño desaparece.
+- [x] El HUD de la plataforma muestra jugador, puntuación, vidas (corazones) y nivel con datos reales; el canvas no dibuja HUD propio.
 - [ ] Al chocar la nave con un asteroide, pierde una vida, se reduce el contador de corazones y a los 2 s reaparece con 3 s de invencibilidad.
 - [ ] Al destruir todos los asteroides sube el nivel y aparecen `3 + nivel` asteroides nuevos.
 - [ ] Un power-up `3x` puede aparecer, se recoge al tocarlo, dispara 3 balas abiertas durante 5 s y el HUD muestra el tiempo restante con una cifra decimal.
-- [ ] El canvas notifica a React los cambios de puntuación, vidas, nivel y power-up, y el fin de partida (vidas = 0 o `end()`), sin que React lea el estado interno del juego.
-- [ ] El botón `PAUSA` detiene el juego (nada se mueve, el tiempo del power-up no baja) y muestra `EN PAUSA`; `REANUDAR` continúa desde el mismo estado. La tecla `P` hace lo mismo, y el motor no reacciona a ninguna tecla de pausa por sí mismo.
+- [x] El canvas notifica a React los cambios de puntuación, vidas, nivel y power-up, y el fin de partida (vidas = 0 o `end()`), sin que React lea el estado interno del juego.
+- [x] El botón `PAUSA` detiene el juego (nada se mueve, el tiempo del power-up no baja) y muestra `EN PAUSA`; `REANUDAR` continúa desde el mismo estado. La tecla `P` hace lo mismo, y el motor no reacciona a ninguna tecla de pausa por sí mismo.
 - [ ] El juego se pausa al cambiar de pestaña o perder el foco la ventana.
-- [ ] Al perder la última vida se abre el modal `FIN DEL JUEGO` con la puntuación real de la partida, y el canvas no muestra overlay `GAME OVER`.
-- [ ] El botón `FIN` abre el modal con el puntaje actual y detiene la partida.
-- [ ] "GUARDAR PUNTUACIÓN" añade a `localStorage["av_scores"]` una entrada `{ game: "asteroides", score, name, at }` con el puntaje real.
-- [ ] "JUGAR DE NUEVO" cierra el modal y empieza una partida con puntuación 0, 3 vidas y nivel 1.
-- [ ] "VOLVER AL VAULT" y "SALIR" navegan fuera sin dejar el bucle ni los listeners activos (tras salir, las flechas vuelven a hacer scroll).
-- [ ] Volver a entrar a `/juegos/asteroides/jugar` varias veces seguidas no duplica el bucle: la velocidad del juego es la misma.
-- [ ] `lib/games/asteroids/engine.ts` no importa `react` ni `next/*`.
-- [ ] Los demás juegos (`/juegos/caida/jugar`, etc.) siguen mostrando el reproductor mock de la spec 01.
-- [ ] Las páginas de las specs 01 a 04 (`/`, `/juegos`, `/juegos/[id]`, `/auth`, `/salon`, `/acerca-de`) se ven y funcionan igual que antes.
+- [x] Al perder la última vida se abre el modal `FIN DEL JUEGO` con la puntuación real de la partida, y el canvas no muestra overlay `GAME OVER`.
+- [x] El botón `FIN` abre el modal con el puntaje actual y detiene la partida.
+- [x] "GUARDAR PUNTUACIÓN" añade a `localStorage["av_scores"]` una entrada `{ game: "asteroides", score, name, at }` con el puntaje real.
+- [x] "JUGAR DE NUEVO" cierra el modal y empieza una partida con puntuación 0, 3 vidas y nivel 1.
+- [x] "VOLVER AL VAULT" y "SALIR" navegan fuera sin dejar el bucle ni los listeners activos (tras salir, las flechas vuelven a hacer scroll).
+- [x] Volver a entrar a `/juegos/asteroides/jugar` varias veces seguidas no duplica el bucle: la velocidad del juego es la misma.
+- [x] `lib/games/asteroids/engine.ts` no importa `react` ni `next/*`.
+- [x] Los demás juegos (`/juegos/caida/jugar`, etc.) siguen mostrando el reproductor mock de la spec 01.
+- [x] Las páginas de las specs 01 a 04 (`/`, `/juegos`, `/juegos/[id]`, `/auth`, `/salon`, `/acerca-de`) se ven y funcionan igual que antes.
 
 ## Decisiones tomadas y descartadas
 
